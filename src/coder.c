@@ -9,13 +9,13 @@ int encode(uint32_t code_point, CodeUnits *code_units);
 		count++;
 	}
 	if (count <= 7) {
-		code_units->code[0] = code_point & 0x7f;
+		code_units->code[0] = code_point;
 		code_units->lenght = 1;
 	} else if (count <= 11) {
-		uint8_t tmp = code_point >> 8;
-		code_units->code[0] = code_point & 0xDF;
-		tmp = code_point 
-		code_units->code[1] = code_point & 0xBF;
+		
+		//code_units->code[0] = code_point & 0xDF;
+		
+		code_units->code[1] = ((code_point << 5) >> 5) | 0x80;
 		code_units->lenght = 2;
 	} else if (count <= 16) {
 		code_units->code[0] = code_point & ;
