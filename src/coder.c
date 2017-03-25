@@ -12,13 +12,13 @@ int encode(uint32_t code_point, CodeUnits *code_units);
 		code_units->code[0] = code_point;
 		code_units->lenght = 1;
 	} else if (count <= 11) {
-		
-		//code_units->code[0] = code_point & 0xDF;
-		
-		code_units->code[1] = ((code_point << 5) >> 5) | 0x80;
+		code_units->code[0] = (code_point & 0x3f) | 0x80;
+		code_units->code[1] = (code_point >> 6) | 0xC0;
 		code_units->lenght = 2;
 	} else if (count <= 16) {
-		code_units->code[0] = code_point & ;
+		code_units->code[0] = (code_point & 0x3f) | 0x80;
+		code_units->code[1] = ((code_point & 0xFC0) >> 6) | 0x80;
+		code_units->code[2] = code_point >> 12;
 		code_units->lenght = 3;
 	} elese if (count <= 21) {
 		code_units->code[0] = code_point & ;
