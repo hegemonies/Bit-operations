@@ -16,11 +16,34 @@ int encode_file(const char *in_file_name, const char *out_file_name)
 		encode(a, &unit);
 	}
 	*/
+	uint32_t a;
 	while(fscanf(in, "%x", &a) != EOF) {
 		uint32_t a;
 		encode(a, &unit);
 	}
 	fclose(in);
+	FILE *out = fopen(out_file_name, "w");
+	if (out == NULL) {
+		return -1;
+	}
+	fwrite(unit->code, sizeof(code), MaxCodeLength, out);
+	fclose(out);
+	return 0;
+}
+
+int decode_file(const char *in_file_name, const char *out_file_name)
+{
+	FILE *in = fopen(in_file_name, "r");
+	if (in == NULL) {
+		return -1;
+	}
+	CodeUnits *unit;
+	uint32_t a;
+	while(fscanf(in, "%x", &a) != EOF) {
+		uint32_t a;
+		decode(&unit);
+	}
+	flose(in);
 	FILE *out = fopen(out_file_name, "w");
 	if (out == NULL) {
 		return -1;
