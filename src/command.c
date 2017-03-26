@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <inttypes.h>
 #include "command.h"
 #include "coder.h"
 

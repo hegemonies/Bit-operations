@@ -36,7 +36,17 @@ int encode(uint32_t code_point, CodeUnits *code_units);
 
 uint32_t decode(const CodeUnit *code_unit)
 {
-	
+	uint32_t code_point;
+	if ((code_unit->code[0] >> 7) == 0) {
+		return (code_point = code_unit->code[0]);
+	} else if (code_unit->code[0] <= 0xDF) {
+			return (code_point = (((code_unit->code[0] & 0x1F) << 6) | (code_unit->code[1] & 0x3F)));
+	} else if (code_unit->code[0] <= 0xEF) {
+			return (((code_unit->code[0] & 0xF) << 12) | ((code_unit->code[1] & 0x3F) << 6) | (code_unit->code[2] & 0x3F));
+	} else if (code_unit->code[0] <= 0xF7) {
+			return (((code_unit[0] & 0x7) << 18) | ((code_unit[1] & 0x3F) << 12) | ((code_unit->code[2] & 0x3F) << 6) | (code_unit->code[3] & 0x3F));
+	}
+	return;
 }
 /*
 int read_next_code_unit(FILE *in, CodeUnits *code_units)

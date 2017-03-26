@@ -1,5 +1,6 @@
 #ifndef CODER_H
 #define CODER_H
+#include <inttypes.h>
 
 enum {
     MaxCodeLength = 4
