@@ -33,12 +33,12 @@ int encode(uint32_t code_point, CodeUnits *code_units);
 	}
 	return -1;
 }
-/*
+
 uint32_t decode(const CodeUnit *code_unit)
 {
 
 }
-
+/*
 int read_next_code_unit(FILE *in, CodeUnits *code_units)
 {
 
