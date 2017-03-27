@@ -9,7 +9,7 @@ int encode_file(const char *in_file_name, const char *out_file_name)
 	if (in == NULL) {
 		return -1;
 	}
-	CodeUnits *unit;
+	CodeUnit unit;
 	/*
 	for (int i = 0; i != EOF; i++) {
 		uint32_t a;
@@ -19,7 +19,7 @@ int encode_file(const char *in_file_name, const char *out_file_name)
 	*/
 	uint32_t a;
 	while(fscanf(in, "%x", &a) != EOF) {
-		uint32_t a;
+		uint32_t a = 0;
 		encode(a, &unit);
 	}
 	fclose(in);
@@ -27,7 +27,7 @@ int encode_file(const char *in_file_name, const char *out_file_name)
 	if (out == NULL) {
 		return -1;
 	}
-	fwrite(unit->code, sizeof(code), MaxCodeLength, out);
+	fwrite(&(unit.code), unit.length, MaxCodeLength, out);
 	fclose(out);
 	return 0;
 }
@@ -38,18 +38,17 @@ int decode_file(const char *in_file_name, const char *out_file_name)
 	if (in == NULL) {
 		return -1;
 	}
-	CodeUnits *unit;
+	CodeUnit unit;
 	uint32_t a;
 	while(fscanf(in, "%x", &a) != EOF) {
-		uint32_t a;
 		decode(&unit);
 	}
-	flose(in);
+	fclose(in);
 	FILE *out = fopen(out_file_name, "w");
 	if (out == NULL) {
 		return -1;
 	}
-	fwrite(unit->code, sizeof(code), MaxCodeLength, out);
+	fwrite(&(unit.code), unit.length, MaxCodeLength, out);
 	fclose(out);
 	return 0;
 }
