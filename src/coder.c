@@ -48,14 +48,46 @@ uint32_t decode(const CodeUnit *code_unit)
 	}
 	return 0;
 }
-/*
+
 int read_next_code_unit(FILE *in, CodeUnit *code_units)
 {
-
+	uint8_t buffer = 0;
+	fread(&buffer, 1, 1, in);
+	while(!feof(in)) {
+		uint8_t enum_bite = 0;
+		while(buffer & (1 << (7 - enum_bite))) {
+			enum_bite++;
+		}
+		if (enum_bite == 1) {
+			fread(&buffer, 1, 1, in);
+			continue;
+		}
+		if (enum_bite == 0) {
+			enum_bite = 1;
+		}
+		if (enum_bite <= MaxCodeLength) {
+			code_units->length = 0;
+			for (int i = 1; i <= enum_bite; i++) {
+				code_units->code[i - 1] = buffer;
+				code_units->length++;
+				if (i == enum_bite) {
+					return 0;
+				}
+				fread(&buffer, 1, 1, in);
+				if ((buffer & 0xC0) != 0x80) {
+					fread(&buffer, 1, 1, in);
+					break;
+				}
+			}
+		}
+	}
+	return -1;
 }
 
 int write_code_unit(FILE *out, const CodeUnit *code_unit)
 {
-
+	if (fwrite(&(code_unit->code), 1, code_unit->length, out) == code_unit->length) {
+		return 0;
+	}
+	return -1;
 }
-*/

@@ -13,8 +13,9 @@ void print_code_unit(CodeUnit code_unit)
 		num_bait++;
 		printf(" ");
 	}
-	printf("\nlength: %x\n", code_unit.length);
+	printf("\nlength: %zu\n", code_unit.length);
 }
+
 
 int main(int argc, char *argv[])
 {
