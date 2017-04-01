@@ -5,50 +5,46 @@
 
 int encode_file(const char *in_file_name, const char *out_file_name)
 {
-	FILE *in = fopen(in_file_name, "r");
+	FILE *in = fopen(in_file_name, "r"); 
 	if (in == NULL) {
 		return -1;
 	}
-	CodeUnit unit;
-	/*
-	for (int i = 0; i != EOF; i++) {
-		uint32_t a;
-		fscanf(in, "%x", &a);
-		encode(a, &unit);
-	}
-	*/
-	uint32_t a;
-	while(fscanf(in, "%x", &a) != EOF) {
-		uint32_t a = 0;
-		encode(a, &unit);
-	}
-	fclose(in);
-	FILE *out = fopen(out_file_name, "w");
+	FILE *out = fopen(out_file_name, "w+");
 	if (out == NULL) {
 		return -1;
 	}
-	fwrite(&(unit.code), unit.length, MaxCodeLength, out);
-	fclose(out);
+	while (1) {
+		char buffer[8];
+		fgets(buffer, 8, in);
+		if (feof(in)) {
+			break;
+		}
+		uint32_t code_point;
+		sscanf(buffer, "%" SCNx32, &code_point);
+		CodeUnit code_unit;
+		encode(code_point, &code_unit);
+		write_code_unit(out, &code_unit);
+	}
+	
 	return 0;
 }
 
 int decode_file(const char *in_file_name, const char *out_file_name)
 {
-	FILE *in = fopen(in_file_name, "r");
+	FILE *in = fopen(in_file_name, "r"); 
 	if (in == NULL) {
 		return -1;
 	}
-	CodeUnit unit;
-	uint32_t a;
-	while(fscanf(in, "%x", &a) != EOF) {
-		decode(&unit);
-	}
-	fclose(in);
-	FILE *out = fopen(out_file_name, "w");
+	CodeUnit code_unit;
+	FILE *out = fopen(out_file_name, "w+");
 	if (out == NULL) {
 		return -1;
 	}
-	fwrite(&(unit.code), unit.length, MaxCodeLength, out);
+	while (!read_next_code_unit(in, &code_unit)) {
+		uint32_t buffer = decode(&code_unit);
+		fprintf(out, "%" PRIx32 "\n", buffer);
+	}
+	fclose(in);
 	fclose(out);
 	return 0;
 }

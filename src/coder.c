@@ -13,21 +13,21 @@ int encode(uint32_t code_point, CodeUnit *code_units)
 		code_units->length = 1;
 		return 0;
 	} else if (count <= 11) {
-		code_units->code[0] = (code_point >> 6) | 0xC0;
-		code_units->code[1] = (code_point & 0x3F) | 0x80;
+		code_units->code[0] = 0xC0 | (code_point >> 6);
+		code_units->code[1] = 0x80 | (code_point & 0x3F);
 		code_units->length = 2;
 		return 0;
 	} else if (count <= 16) {
-		code_units->code[0] = (code_point >> 12) | 0xE0;
-		code_units->code[1] = ((code_point & 0xFC0) >> 6) | 0x80;
-		code_units->code[2] = (code_point & 0x3F) | 0x80;
+		code_units->code[0] =  0xE0 | (code_point >> 12);
+		code_units->code[1] =  0x80 | ((code_point & 0xFC0) >> 6);
+		code_units->code[2] =  0x80 | (code_point & 0x3F);
 		code_units->length = 3;
 		return 0;
 	} else if (count <= 21) {
-		code_units->code[0] = (code_point >> 18) | 0xF0;
-		code_units->code[1] = (code_point & 0x3F000) >> 12;
-		code_units->code[2] = (code_point & 0xFC0) >> 6;
-		code_units->code[3] = code_point & 0x3F;
+		code_units->code[0] = 0xF0 | (code_point >> 18);
+		code_units->code[1] = 0x80 | ((code_point & 0x3F000) >> 12);
+		code_units->code[2] = 0x80 | ((code_point & 0xFC0) >> 6);
+		code_units->code[3] = 0x80 | (code_point & 0x3F);
 		code_units->length = 4;
 		return 0;
 	}
@@ -48,6 +48,7 @@ uint32_t decode(const CodeUnit *code_unit)
 	}
 	return 0;
 }
+
 
 int read_next_code_unit(FILE *in, CodeUnit *code_units)
 {
