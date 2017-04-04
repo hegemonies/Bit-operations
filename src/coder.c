@@ -76,7 +76,8 @@ int read_next_code_unit(FILE *in, CodeUnit *code_units)
 				}
 				fread(&buffer, 1, 1, in);
 				if ((buffer & 0xC0) != 0x80) {
-					fread(&buffer, 1, 1, in);
+					//code_units->code[0] = buffer;
+					//fread(&buffer, 1, 1, in);
 					break;
 				}
 			}
@@ -87,7 +88,7 @@ int read_next_code_unit(FILE *in, CodeUnit *code_units)
 
 int write_code_unit(FILE *out, const CodeUnit *code_unit)
 {
-	if (fwrite(&(code_unit->code), 1, code_unit->length, out) == code_unit->length) {
+	if (fwrite(code_unit->code, 1, code_unit->length, out) == code_unit->length) {
 		return 0;
 	}
 	return -1;
